@@ -68,7 +68,7 @@ class VideoTransformer(VideoTransformerBase):
     def __init__(self):
         self.counter = 0
         self.stage = None
-        self.frame_count = 0  # لتخفيف الضغط ومنع التعليق
+        self.frame_count = 0
 
     def transform(self, frame):
         img = frame.to_ndarray(format="bgr24")
@@ -76,7 +76,6 @@ class VideoTransformer(VideoTransformerBase):
         rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         
         self.frame_count += 1
-        # معالجة إطار واحد من كل ثلاثة إطارات لمنع التعليق تماماً
         if self.frame_count % 3 == 0:
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
             
@@ -99,9 +98,8 @@ class VideoTransformer(VideoTransformerBase):
 
                         color = (0, 255, 0) if is_correct else (0, 0, 255)
                         
-                        # رسم لوحة التنبيهات الفورية
                         overlay = rgb.copy()
-                        cv2.rectangle(overlay, (15, 15), <github_placeholder> (440, 125), (15, 23, 42), -1)
+                        cv2.rectangle(overlay, (15, 15), (440, 125), (15, 23, 42), -1)
                         cv2.addWeighted(overlay, 0.7, rgb, 0.3, 0, rgb)
                         
                         border_color = (0, 255, 0) if is_correct else (0, 0, 255)
